@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scripts/main_node.gd" type="Script" id=1]
+[ext_resource path="res://scenes/player_area2d.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/enemies_rigidBody2D.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/hud_canvasLayer.tscn" type="PackedScene" id=4]
+[ext_resource path="res://audios/House In a Forest Loop.ogg" type="AudioStream" id=5]
+[ext_resource path="res://audios/gameover.wav" type="AudioStream" id=6]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 480, 0, 0, 0, 0, 0, 480, 720, 0, 0, 0, 0, 0, 720, 0, 0, 0, 0, 0, 0 )
+}
+
+[node name="MainNode" type="Node"]
+script = ExtResource( 1 )
+Enemies = ExtResource( 3 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.14902, 0.486275, 0.501961, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HUDCanvasLayer" parent="." instance=ExtResource( 4 )]
+
+[node name="EnemiesTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="StartPosition2D" type="Position2D" parent="."]
+position = Vector2( 240, 450 )
+
+[node name="EnemiesPath2D" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="EnemiesPathFollow2D" type="PathFollow2D" parent="EnemiesPath2D"]
+
+[node name="PlayerArea2D" parent="." instance=ExtResource( 2 )]
+
+[node name="MusicAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="DeathAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+[connection signal="start_game" from="HUDCanvasLayer" to="." method="_on_HUDCanvasLayer_start_game"]
+[connection signal="timeout" from="EnemiesTimer" to="." method="_on_EnemiesTimer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_EscoreTimer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
+[connection signal="hit" from="PlayerArea2D" to="." method="_on_PlayerArea2D_hit"]
