@@ -1,6 +1,5 @@
 extends Node
 
-
 export(PackedScene) var Enemies
 var score
 
@@ -28,19 +27,26 @@ func _on_EnemiesTimer_timeout():
 	print("_on_EnemiesTimer_timeout")
 	# Choose a random location on Path2D.
 	$EnemiesPath2D/EnemiesPathFollow2D.offset = randi()
+	print($EnemiesPath2D/EnemiesPathFollow2D.offset)
 	# Create a Mob instance and add it to the scene
 	var enemies = Enemies.instance()
 	add_child(enemies)
-	# Set the mob's direction perpendicular to the path direction.
-	var direction = $EnemiesPath2D/EnemiesPathFollow2D.rotation + PI / 2
 	# Set the mob's position to a random location.
 	enemies.position = $EnemiesPath2D/EnemiesPathFollow2D.position
-	# Add some randomness to the direction.
+	# Set the mob's direction perpendicular to the path direction.
+#	print(rad2deg($EnemiesPath2D/EnemiesPathFollow2D.rotation))
+	var direction = $EnemiesPath2D/EnemiesPathFollow2D.rotation + PI / 2
+#	print(rad2deg(direction))
+#	# Add some randomness to the direction.
 	direction += rand_range(-PI/4,PI/4)
+	print(rad2deg(direction))
 	enemies.rotation = direction
-	# Set the velocity (speed & direction).
+#	# Set the velocity (speed & direction).
 	enemies.linear_velocity = Vector2(rand_range(enemies.min_speed,enemies.max_speed),0)
+	print(enemies.linear_velocity)
+	# Rotaciona o enemies na direção do movimenot 
 	enemies.linear_velocity = enemies.linear_velocity.rotated(direction)
+	print(enemies.linear_velocity)
 
 func _on_EscoreTimer_timeout():
 	score += 1
